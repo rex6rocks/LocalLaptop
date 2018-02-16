@@ -1,0 +1,102 @@
+#%RAML 0.8
+title: America Flights API
+version: 1.0
+#baseUri: http://apdev-american-ws-tr.cloud.io/api
+baseUri: https://mocksvc.mulesoft.com/mocks/eb6408f0-24c6-4c33-81fa-626dadda25af
+
+schemas:
+  - flight: |
+       {
+          "properties": {
+            "code": {
+              "description": "The flight ID",
+              "type": "string",
+              "required": true
+            },
+            "price":  {
+              "description": "The flight price",
+              "type": "number",
+              "required": true
+            },
+            "depatureDate": {
+              "description": "The flight departure date",
+              "type": "string",
+              "required": true
+            },
+            "origin": {
+              "description": "The three letter airport code for the airport of origination",
+              "type": "string",
+              "required": true
+            },
+            "destination": {
+              "description": "The three letter airport code for the airport destination",
+              "type": "string",
+              "required": true
+            },
+            "plane": {
+              "description": "The plane specs",
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "totalSeate": {
+                  "type": "integer"
+              }
+            }
+          }
+        }
+      }
+     }
+    
+
+/flights:
+    get:
+      queryParameters: 
+        destination:
+          required: false
+            enum: [SFO, LAX, CLE]
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: AmericanFlight[]
+                example: !include exchange_modules/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flights-example/1.0.1/AmericanFlightsExample.raml
+  post:
+    body: 
+      application/json:
+        type: AmericanFlight
+          example: !include examples/AmericanFlightNoIDExample.raml
+    responses: 
+      201:
+        body: 
+          application/json:
+            example:
+              message: Flight added (but not really)
+  
+  /{ID}:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: AmericanFlight
+                example: !include examples/AmericanFlightExample.raml
+    delete:
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight deleted (but not really)
+    put:
+      body:
+        application/json:
+          type: AmericanFlight
+            example: !include examples/AmericanFlightNoIDExample.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight updated (but not really)

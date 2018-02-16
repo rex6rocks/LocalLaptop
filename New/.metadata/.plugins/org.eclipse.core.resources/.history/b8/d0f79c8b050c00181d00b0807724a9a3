@@ -1,0 +1,71 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/5ca14970-0bbd-4d83-9d69-75d7ea3f2d68 # 
+title: American Flights2 API
+version: 1.0
+
+types: 
+  AmericanFlight: !include exchange_modules/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flight-data-type/1.0.1/AmericanFlightDataType.raml
+
+traits:
+  client-id-required:
+    queryParameters:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+
+/flights:
+  is: [client-id-required]
+  get:
+    queryParameters: 
+      destination:
+        required: false
+        enum: 
+          - SFO
+          - LAX
+          - CLE
+    responses: 
+      200:
+        body: 
+          application/json:
+            type: AmericanFlight[]
+            example: !include exchange_modules/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flights-example/1.0.1/AmericanFlightsExample.raml
+
+  post:
+    body:
+      application/json:
+        type: AmericanFlight
+        example: !include examples/AmericanFlightNoIDExample.raml
+    responses: 
+      201:
+        body: 
+          application/json:
+            example:
+              message: Flight addded (but not really)
+  /{ID}:
+    is: [client-id-required]
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: AmericanFlight
+              example: !include examples/AmericanFlightExample.raml
+    delete:
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight deleted (but not really)
+    put:
+      body:
+        application/json:
+          type: AmericanFlight
+          example: !include examples/AmericanFlightNoIDExample.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight updated (but not really)
